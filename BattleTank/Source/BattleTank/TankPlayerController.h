@@ -16,7 +16,7 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 
-public:
+private:
 	ATank* GetControlledTank() const;
 
 	virtual void BeginPlay() override;
@@ -28,4 +28,12 @@ public:
 // Return an OUT parameter, true if hit landscape
 	// in the future should I rename HitLocation to OutHitLocation
 	bool GetSightRayHitLocation(FVector& HitLocation) const;
+
+	UPROPERTY(EditAnywhere)
+	float CrossHairXLocation = 0.5;
+
+	UPROPERTY(EditAnywhere)
+	float CrossHairYLocation = 0.33333;
+
+	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
 };
