@@ -2,6 +2,9 @@
 
 #include "TankAimingComponent.h"
 #include "BattleTank.h"
+#include "Components/SceneComponent.h"      // that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
+#include "Components/StaticMeshComponent.h"// that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
+#include "Kismet/GameplayStatics.h"       // that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -36,8 +39,27 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 }
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	//auto OurTankName = GetOwner()->GetName();
-	//auto BarrelLocation = Barrel->GetComponentLocation().ToString();
-	//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s from %s"), *OurTankName, *HitLocation.ToString(), *BarrelLocation);
-	UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), LaunchSpeed);
+	//UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), LaunchSpeed);
+	if (!Barrel) { return; }
+ 	FVector OutLaunchVelocity;
+	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+	if (UGameplayStatics::SuggestProjectileVelocity
+		(
+			this,
+			OutLaunchVelocity,
+			StartLocation,
+			HitLocation,
+			LaunchSpeed,
+			false,
+			0,
+			0,
+			ESuggestProjVelocityTraceOption::DoNotTrace
+			)
+		)
+	{
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto TankName = GetOwner()->GetName();
+		UE_LOG(LogTemp, Warning, TEXT("%s Aiming at %s"),*TankName, *AimDirection.ToString());
+	}
+	// If no solution found do nothing
 }
