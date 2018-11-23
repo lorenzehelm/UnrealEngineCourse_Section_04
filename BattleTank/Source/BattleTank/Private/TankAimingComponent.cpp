@@ -3,6 +3,7 @@
 #include "TankAimingComponent.h"
 #include "BattleTank.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "Components/SceneComponent.h"      // that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
 #include "Components/StaticMeshComponent.h"// that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
 #include "Kismet/GameplayStatics.h"       // that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
@@ -19,8 +20,14 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
+}
 
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	if (!TurretToSet) { return; }
+	Turret = TurretToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
@@ -64,5 +71,5 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-	Barrel->Elevate(DeltaRotator.Pitch); // TODO remove magic number
+	Barrel->Elevate(DeltaRotator.Pitch);
 }
