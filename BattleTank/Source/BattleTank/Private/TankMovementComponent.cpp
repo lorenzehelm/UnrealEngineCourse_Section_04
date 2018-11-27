@@ -30,7 +30,6 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
 	//UE_LOG(LogTemp, Warning, TEXT("Intend move forward throw: %f"), Throw)
 	LeftTrack->SetThrottle(Throw);
 	RightTrack->SetThrottle(Throw);
-	// TODO prevent double-speed due to dual control use
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
@@ -39,5 +38,4 @@ void UTankMovementComponent::IntendTurnRight(float Throw)
 	//UE_LOG(LogTemp, Warning, TEXT("Intend turn throw: %f"), Throw)
 	LeftTrack->SetThrottle(Throw);
 	RightTrack->SetThrottle(-Throw);
-	// TODO prevent double-speed due to dual control use
 }
