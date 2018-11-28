@@ -4,7 +4,6 @@
 #include "BattleTank.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
-#include "TankAimingComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -19,15 +18,6 @@ void ATank::BeginPlay()
 	Super::BeginPlay(); // Needed for BP Beging Pley to run
 	//auto TankName = GetName();
 	//UE_LOG(LogTemp, Warning, TEXT("%s DONKEY: Tank C++ BeginPlay"), *TankName);
-
-	TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
-}
-
-void ATank::AimAt(FVector HitLocation)
-{
-	if (!ensure(TankAimingComponent)) { return; }
-	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
-	//UE_LOG(LogTemp, Warning, TEXT("test i'm here"));
 }
 
 void ATank::Fire()
