@@ -5,8 +5,6 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
-class ATank;
-
 /**
  * 
  */
@@ -21,5 +19,5 @@ private:
 		virtual void Tick(float DeltaSeconds) override;
 
 		// How close can the AI tank get
-		float AcceptanceRadius = 3000;
+		float AcceptanceRadius = 500;  // value was 3000
 };

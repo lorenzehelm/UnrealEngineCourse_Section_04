@@ -2,8 +2,6 @@
 
 #include "Tank.h"
 #include "BattleTank.h"
-#include "TankBarrel.h"
-#include "Projectile.h"
 
 // Sets default values
 ATank::ATank()
@@ -12,31 +10,4 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 	auto TankName = GetName();
 	UE_LOG(LogTemp, Warning, TEXT("%s DONKEY: Tank C++ Construct"), *TankName);
-}
-void ATank::BeginPlay()
-{
-	Super::BeginPlay(); // Needed for BP Beging Pley to run
-	//auto TankName = GetName();
-	//UE_LOG(LogTemp, Warning, TEXT("%s DONKEY: Tank C++ BeginPlay"), *TankName);
-}
-
-void ATank::Fire()
-{
-	//auto Time = GetWorld()->GetTimeSeconds();
-	//UE_LOG(LogTemp, Warning, TEXT("%f: Tank fires"), Time);
-	if (!ensure(Barrel)) { return; }
-	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-
-	if (isReloaded)
-	{
-		// Spawn a projectile at the socket location on the barrel
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
-			ProjectileBlueprint,
-			Barrel->GetSocketLocation(FName("Projectile")),
-			Barrel->GetSocketRotation(FName("Projectile"))
-			);
-
-		Projectile->LaunchProjectile(LaunchSpeed);
-		LastFireTime = FPlatformTime::Seconds();
-	}
 }

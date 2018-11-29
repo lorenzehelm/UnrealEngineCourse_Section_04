@@ -3,7 +3,9 @@
 #include "TankAimingComponent.h"
 #include "BattleTank.h"
 #include "TankBarrel.h"
+#include "Projectile.h"
 #include "TankTurret.h"
+#include "ConstructorHelpers.h" // thats need for auto picking ProjectileBP to tank aiming component after compiling https://www.udemy.com/unrealcourse/learn/v4/questions/5136422 
 #include "Components/SceneComponent.h"      // that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
 #include "Components/StaticMeshComponent.h"// that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
 #include "Kismet/GameplayStatics.h"       // that was added because else I got errors connected with "Barrel", "UGameplayStatics", "ESuggestProjVelocityTraceOption::DoNotTrace"
@@ -14,8 +16,15 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	//bWantsBeginPlay = true;   He has that string
-	PrimaryComponentTick.bCanEverTick = false;
 
+	// thats need for auto picking ProjectileBP to tank aiming component after compiling https://www.udemy.com/unrealcourse/learn/v4/questions/5136422 
+	static ConstructorHelpers::FClassFinder<AProjectile> Proj(TEXT("/Game/Tank/ProjectileBP"));
+	if (Proj.Class)
+	{
+		ProjectileBlueprint = Proj.Class;
+	}
+	// thats need for auto picking ProjectileBP to tank aiming component after compiling https://www.udemy.com/unrealcourse/learn/v4/questions/5136422 
+	PrimaryComponentTick.bCanEverTick = false;
 	// ...
 }
 
@@ -71,4 +80,25 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
+}
+
+void UTankAimingComponent::Fire()
+{
+	//auto Time = GetWorld()->GetTimeSeconds();
+	//UE_LOG(LogTemp, Warning, TEXT("%f: Tank fires"), Time);
+	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+
+	if (isReloaded)
+	{
+		// Spawn a projectile at the socket location on the barrel
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileBlueprint,
+			Barrel->GetSocketLocation(FName("Projectile")),
+			Barrel->GetSocketRotation(FName("Projectile"))
+			);
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
+	}
 }
