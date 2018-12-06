@@ -11,3 +11,18 @@ ATank::ATank()
 	auto TankName = GetName();
 	UE_LOG(LogTemp, Warning, TEXT("%s DONKEY: Tank C++ Construct"), *TankName);
 }
+
+float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser)
+{
+	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
+	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
+	CurrentHealth -= DamageToApply;
+
+	UE_LOG(LogTemp, Warning, TEXT("DamageAmount=%f, DamageToApply=%f"), DamageAmount, DamageToApply)
+
+	if (CurrentHealth <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tank died"))
+	}
+	return DamageToApply;
+}
