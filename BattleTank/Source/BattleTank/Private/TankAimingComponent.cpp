@@ -15,7 +15,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true;   //He has that string
+	//bWantsBeginPlay = true;   //He has that string
 
 	// thats need for auto picking ProjectileBP to tank aiming component after compiling https://www.udemy.com/unrealcourse/learn/v4/questions/5136422 
 	static ConstructorHelpers::FClassFinder<AProjectile> Proj(TEXT("/Game/Tank/ProjectileBP"));
@@ -113,13 +113,13 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 		//UE_LOG(LogTemp, Warning, TEXT("%f: No aim solution found"), Time);
 	}
 }
-void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+void UTankAimingComponent::MoveBarrelTowards(FVector TargetAimDirection)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 	//UE_LOG(LogTemp, Warning, TEXT("test i'm here"));
 	// Work-out difference between current barrel rotation, and AimDirection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	auto AimAsRotator = AimDirection.Rotation();
+	auto AimAsRotator = TargetAimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	// Always yaw the shortest way
 	Barrel->Elevate(DeltaRotator.Pitch);
