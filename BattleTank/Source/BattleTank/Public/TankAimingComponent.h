@@ -70,10 +70,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	// EditDefaultsOnly -it works only for blueprint, and every instance has equal value
 	// EditAnyWhere - it works for every indivdual instance
-	float ReloadTimeInSeconds = 3;
+	float ReloadTimeInSeconds = 2;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 RoundsLeft = 3;
+	int32 RoundsLeft = 15;
 
 	double LastFireTime = 0;
 
