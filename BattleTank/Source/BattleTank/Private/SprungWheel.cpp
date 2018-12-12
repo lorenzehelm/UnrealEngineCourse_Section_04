@@ -22,6 +22,7 @@ ASprungWheel::ASprungWheel()
 
 	AxleWheelConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("AxleWheelConstraint"));
 	AxleWheelConstraint->SetupAttachment(Axle);
+
 }
 
 // Called when the game starts or when spawned
